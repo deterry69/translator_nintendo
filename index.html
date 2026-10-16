@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nintendo Switch // AI Translator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&family=Space+Grotesk:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <header>
+            <small>NINTENDO SWITCH // AI-PAK</small>
+            <h1>Translating with Transformers</h1>
+            <p id="status" data-state="loading">Loading translation model...</p>
+        </header>
+
+        <section>
+            <label for="inputText">English Stage</label>
+            <textarea id="inputText" placeholder="Write something in English to warp-translate into Spanish..." rows="4"></textarea>
+            <button id="trButton" disabled>Press Start to Translate</button>
+        </section>
+
+        <section>
+            <h3>Spanish Stage</h3>
+            <output id="result">Your translation will appear in this dialogue box...</output>
+        </section>
+    </main>
+
+    <script type="module">
+        import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.2';
+
+        const trButton = document.getElementById('trButton');
+        const status = document.getElementById('status');
+        const result = document.getElementById('result');
+        const inputText = document.getElementById('inputText');
+
+        let translator = null;
+
+        async function init() {
+            status.innerText = 'INSERTING AI GAME CARD...';
+            status.dataset.state = 'loading';
+            
+            const supportsGpu = typeof navigator !== 'undefined' && 'gpu' in navigator;
+            translator = await pipeline('translation', 'Xenova/opus-mt-en-es', {
+                device: supportsGpu ? 'webgpu' : 'wasm'
+            });
+            
+            status.innerText = `READY TO PLAY! (${supportsGpu ? 'WEBGPU 60FPS' : 'WASM MODE'})`;
+            status.dataset.state = 'ready';
+            trButton.disabled = false;
+        }
+
+        async function translate() {
+            const text = inputText.value.trim();
+            if (!text || !translator) return;
+
+            trButton.disabled = true;
+            status.innerText = 'WARP PIPE TRANSLATING...';
+            status.dataset.state = 'working';
+            result.dataset.populated = 'false';
+
+            const output = await translator(text);
+
+            result.innerText = output[0].translation_text;
+            result.dataset.populated = 'true';
+            status.innerText = 'STAGE CLEAR! (+1 UP)';
+            status.dataset.state = 'ready';
+            trButton.disabled = false;
+        }
+
+        trButton.addEventListener('click', translate);
+        init();
+    </script>
+</body>
+</html>

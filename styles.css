@@ -1,0 +1,496 @@
+/* ==========================================================================
+   NINTENDO SWITCH OLED & SUPER NINTENDO ULTRA-INTERACTIVE DESIGN SYSTEM
+   100% Pure External CSS Architecture • 0% CSS in HTML
+   ========================================================================== */
+
+@property --joycon-left-y {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: -28px;
+}
+
+@property --joycon-right-y {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 28px;
+}
+
+@property --rumble-offset-x {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 0px;
+}
+
+@property --led-home-opacity {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0.25;
+}
+
+:root {
+    --nintendo-red: #e60012;
+    --nintendo-red-dark: #a8000d;
+    --nintendo-red-bright: #ff1f33;
+    --nintendo-white: #ffffff;
+    
+    --joycon-blue: #00c3e3;
+    --joycon-blue-dark: #008ca3;
+    --joycon-blue-deep: #005f70;
+    --joycon-blue-highlight: #66ebff;
+    
+    --joycon-red: #ff4554;
+    --joycon-red-dark: #c91e2c;
+    --joycon-red-deep: #870c16;
+    --joycon-red-highlight: #ff858f;
+    
+    --mario-gold: #ffcc00;
+    --mario-gold-dark: #cc8800;
+    --luigi-green: #26d04c;
+    --luigi-green-dark: #12872c;
+    
+    --chassis-matte: #1c1e24;
+    --bezel-oled: #07080a;
+    
+    --switch-card-bg: #ffffff;
+    --switch-card-alt: #f4f6f9;
+    --switch-text-dark: #2d2d2d;
+    --switch-border-light: #dcdcdc;
+    --switch-cursor-cyan: #00d2ff;
+    
+    --font-nintendo-ui: 'Space Grotesk', 'Inter', sans-serif;
+    --font-nintendo-mono: 'JetBrains Mono', monospace;
+    
+    --ease-joycon-snap: cubic-bezier(0.28, 1.75, 0.52, 1);
+    --ease-mario-jump: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-smooth-os: cubic-bezier(0.22, 1, 0.36, 1);
+    
+    --console-max-width: 980px;
+    --joycon-width: 112px;
+    --console-radius: 36px;
+    --joycon-outer-radius: 56px;
+    --card-radius: 20px;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-nintendo-ui);
+    background-color: var(--nintendo-red);
+    background-image:
+        radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.16) 0%, transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(0, 195, 227, 0.22) 0%, transparent 40%),
+        radial-gradient(circle at 50% 0%, #ff2a3c 0%, #e60012 55%, #b3000e 100%);
+    color: var(--switch-text-dark);
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1rem, 12vw, 9rem);
+    position: relative;
+    overflow-x: hidden;
+    perspective: 1600px;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: -100px;
+    background-image:
+        radial-gradient(rgba(255, 255, 255, 0.14) 2.5px, transparent 2.5px),
+        radial-gradient(rgba(255, 204, 0, 0.1) 2px, transparent 2px);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
+    animation: nintendoPlazaDrift 16s linear infinite;
+    z-index: -2;
+    pointer-events: none;
+}
+
+@keyframes nintendoPlazaDrift {
+    0% { transform: translate3d(0, 0, 0) rotate(-3deg); }
+    100% { transform: translate3d(40px, 40px, 0) rotate(-3deg); }
+}
+
+body::after {
+    content: "★ SUPER TRANSFORMER BROS. • NINTENDO SWITCH AI EDITION ★";
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-nintendo-mono);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(0, 0, 0, 0.35);
+    padding: 0.4rem 1.25rem;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+main {
+    width: 100%;
+    max-width: var(--console-max-width);
+    background:
+        repeating-linear-gradient(90deg, #050608 0px, #050608 6px, transparent 6px, transparent 10px) 50% 6px / 120px 5px no-repeat,
+        linear-gradient(125deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 38%, transparent 38.5%, transparent 100%),
+        linear-gradient(180deg, #f5f7fa 0%, #e4e8f0 100%) padding-box;
+    border-style: solid;
+    border-width: 24px 28px 28px 28px;
+    border-color: var(--bezel-oled);
+    border-radius: var(--console-radius);
+    box-shadow:
+        inset 0 4px 12px rgba(0, 0, 0, 0.18),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.7),
+        0 0 0 4px var(--chassis-matte),
+        0 0 0 7px #333842,
+        0 16px 0 4px #0b0c0e,
+        0 20px 0 6px #1e2229,
+        0 45px 85px -10px rgba(60, 0, 5, 0.78),
+        0 18px 35px rgba(0, 0, 0, 0.6);
+    padding: clamp(1.5rem, 3vw, 2.4rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem;
+    position: relative;
+    z-index: 2;
+    transform-style: preserve-3d;
+    transform: rotateX(5deg) scale(0.98);
+    transition: transform 0.6s var(--ease-joycon-snap), box-shadow 0.5s var(--ease-smooth-os);
+}
+
+main:hover, main:focus-within {
+    --joycon-left-y: 0px;
+    --joycon-right-y: 0px;
+    transform: rotateX(0deg) scale(1) translateY(-6px);
+    box-shadow:
+        inset 0 4px 12px rgba(0, 0, 0, 0.15),
+        inset 0 0 0 2px #ffffff,
+        0 0 0 4px var(--chassis-matte),
+        0 0 0 7px #474e5c,
+        0 20px 0 4px #0b0c0e,
+        0 24px 0 6px #1e2229,
+        0 60px 110px -12px rgba(40, 0, 5, 0.85),
+        0 0 55px rgba(255, 255, 255, 0.25);
+}
+
+main::before {
+    content: "";
+    position: absolute;
+    top: -28px;
+    bottom: -28px;
+    left: calc(-1 * var(--joycon-width) - 26px);
+    width: var(--joycon-width);
+    border-radius: var(--joycon-outer-radius) 6px 6px var(--joycon-outer-radius);
+    transform: translateY(var(--joycon-left-y)) translateX(var(--rumble-offset-x));
+    transition: transform 0.55s var(--ease-joycon-snap), filter 0.35s ease, box-shadow 0.35s ease;
+    pointer-events: none;
+    z-index: -1;
+    background:
+        linear-gradient(180deg, #1b1e24, #2d323d) 68% 36px / 22px 7px no-repeat,
+        radial-gradient(circle at 50% 30%, #3a404d 0%, #1e2129 52%, #0d0f12 56%, transparent 57%) 50% 95px / 58px 58px no-repeat,
+        radial-gradient(circle at 50% 50%, #16181f 0%, #090a0d 65%, transparent 66%) 50% 100px / 64px 64px no-repeat,
+        radial-gradient(circle at 50% 45%, #383d4a 0%, #1d2026 70%, transparent 72%) 50% 210px / 26px 26px no-repeat,
+        radial-gradient(circle at 50% 45%, #383d4a 0%, #1d2026 70%, transparent 72%) 50% 262px / 26px 26px no-repeat,
+        radial-gradient(circle at 50% 45%, #383d4a 0%, #1d2026 70%, transparent 72%) 22% 236px / 26px 26px no-repeat,
+        radial-gradient(circle at 50% 45%, #383d4a 0%, #1d2026 70%, transparent 72%) 78% 236px / 26px 26px no-repeat,
+        radial-gradient(circle at 50% 50%, #14161c 0%, #14161c 42%, #2c303b 45%, #2c303b 70%, transparent 72%) 64% 335px / 22px 22px no-repeat,
+        linear-gradient(90deg, transparent 91%, #1b1e24 91%, #2e333d 96%, #111317 100%),
+        radial-gradient(circle at 30% 15%, var(--joycon-blue-highlight) 0%, transparent 45%),
+        linear-gradient(180deg, var(--joycon-blue) 0%, #00b0cf 75%, var(--joycon-blue-dark) 100%);
+    box-shadow:
+        16px -10px 0 -4px #1e2129,
+        inset 4px 4px 10px rgba(255, 255, 255, 0.45),
+        inset -6px -10px 16px rgba(0, 55, 70, 0.55),
+        0 16px 0 0 var(--joycon-blue-deep),
+        0 22px 0 2px #090a0d,
+        -15px 30px 45px rgba(0, 0, 0, 0.55);
+}
+
+main::after {
+    content: "";
+    position: absolute;
+    top: -28px;
+    bottom: -28px;
+    right: calc(-1 * var(--joycon-width) - 26px);
+    width: var(--joycon-width);
+    border-radius: 6px var(--joycon-outer-radius) var(--joycon-outer-radius) 6px;
+    transform: translateY(var(--joycon-right-y)) translateX(calc(-1 * var(--rumble-offset-x)));
+    transition: transform 0.55s var(--ease-joycon-snap), filter 0.35s ease, box-shadow 0.35s ease;
+    pointer-events: none;
+    z-index: -1;
+    background:
+        linear-gradient(180deg, #1b1e24, #2d323d) 32% 30px / 7px 21px no-repeat,
+        linear-gradient(90deg, #1b1e24, #2d323d) 24% 37px / 21px 7px no-repeat,
+        radial-gradient(circle at 50% 40%, #3d4352 0%, #1a1d24 68%, transparent 71%) 50% 82px / 27px 27px no-repeat,
+        radial-gradient(circle at 50% 40%, #3d4352 0%, #1a1d24 68%, transparent 71%) 50% 136px / 27px 27px no-repeat,
+        radial-gradient(circle at 50% 40%, #3d4352 0%, #1a1d24 68%, transparent 71%) 20% 109px / 27px 27px no-repeat,
+        radial-gradient(circle at 50% 40%, #3d4352 0%, #1a1d24 68%, transparent 71%) 80% 109px / 27px 27px no-repeat,
+        radial-gradient(circle at 50% 30%, #3a404d 0%, #1e2129 52%, #0d0f12 56%, transparent 57%) 50% 215px / 58px 58px no-repeat,
+        radial-gradient(circle at 50% 50%, #16181f 0%, #090a0d 65%, transparent 66%) 50% 220px / 64px 64px no-repeat,
+        radial-gradient(circle at 50% 50%, #1c2029 0%, #1c2029 44%, rgba(0, 210, 255, var(--led-home-opacity)) 48%, #00d2ff 64%, #111318 68%, transparent 71%) 36% 335px / 26px 26px no-repeat,
+        linear-gradient(270deg, transparent 91%, #1b1e24 91%, #2e333d 96%, #111317 100%),
+        radial-gradient(circle at 70% 15%, var(--joycon-red-highlight) 0%, transparent 45%),
+        linear-gradient(180deg, var(--joycon-red) 0%, #f02c3d 75%, var(--joycon-red-dark) 100%);
+    box-shadow:
+        -16px -10px 0 -4px #1e2129,
+        inset -4px 4px 10px rgba(255, 255, 255, 0.42),
+        inset 6px -10px 16px rgba(90, 0, 10, 0.55),
+        0 16px 0 0 var(--joycon-red-deep),
+        0 22px 0 2px #090a0d,
+        15px 30px 45px rgba(0, 0, 0, 0.55);
+}
+
+main:has(textarea:focus) { --led-home-opacity: 0.95; }
+main:has(button:hover:not(:disabled)) { --led-home-opacity: 1; }
+
+header {
+    grid-column: 1 / -1;
+    background: var(--switch-card-bg);
+    border: 3px solid var(--switch-border-light);
+    border-radius: 22px;
+    padding: 1.35rem 5.5rem 1.5rem 5.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.7rem;
+    position: relative;
+    box-shadow: 0 8px 0 var(--switch-border-light), 0 12px 24px rgba(0, 0, 0, 0.06);
+}
+
+header small {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-nintendo-mono);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--nintendo-white);
+    background: var(--nintendo-red);
+    padding: 0.38rem 1.15rem;
+    border-radius: 999px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 0 var(--nintendo-red-dark);
+    cursor: pointer;
+}
+
+header small::after {
+    content: "100% NINTENDO UI";
+    position: absolute;
+    inset: 0;
+    background: var(--mario-gold);
+    color: #1a1412;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.25s var(--ease-mario-jump);
+}
+
+header small:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+h1 {
+    font-size: clamp(1.65rem, 3.1vw, 2.45rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--nintendo-red);
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 #ffffff, 0 2px 0 #b8000e, 0 3px 0 #a3000c, 0 4px 0 #8f000b, 0 6px 0 #2d2d2d;
+    cursor: pointer;
+}
+
+#status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-family: var(--font-nintendo-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--switch-text-dark);
+    background: var(--switch-card-alt);
+    padding: 0.48rem 1.15rem;
+    border-radius: 999px;
+    border: 2px solid var(--switch-border-light);
+}
+
+#status[data-state="ready"] {
+    background: #ebfff0;
+    border-color: var(--luigi-green);
+    color: #0d5c1f;
+}
+
+#status[data-state="working"] {
+    background: #e6fbff;
+    border-color: var(--joycon-blue);
+    color: var(--joycon-blue-deep);
+}
+
+section {
+    background: var(--switch-card-bg);
+    border: 3px solid var(--switch-border-light);
+    border-radius: var(--card-radius);
+    padding: 1.45rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    box-shadow: 0 8px 0 var(--switch-border-light), 0 14px 28px rgba(0, 0, 0, 0.06);
+    transition: transform 0.4s var(--ease-mario-jump);
+}
+
+section:first-of-type { border-top: 8px solid var(--joycon-blue); }
+section:last-of-type { border-top: 8px solid var(--joycon-red); }
+
+label, h3 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--switch-text-dark);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px dashed #e2e6ee;
+}
+
+label::before {
+    content: "🟦 1P • JOY-CON (L)";
+    font-family: var(--font-nintendo-mono);
+    font-size: 0.68rem;
+    color: var(--nintendo-white);
+    background: var(--joycon-blue);
+    padding: 0.22rem 0.65rem;
+    border-radius: 8px;
+}
+
+h3::before {
+    content: "🟥 2P • JOY-CON (R)";
+    font-family: var(--font-nintendo-mono);
+    font-size: 0.68rem;
+    color: var(--nintendo-white);
+    background: var(--joycon-red);
+    padding: 0.22rem 0.65rem;
+    border-radius: 8px;
+}
+
+textarea {
+    width: 100%;
+    flex-grow: 1;
+    min-height: 165px;
+    background-color: #f8fafd;
+    background-image: repeating-linear-gradient(0deg, transparent 0px, transparent 27px, rgba(0, 195, 227, 0.12) 27px, rgba(0, 195, 227, 0.12) 28px);
+    border: 3px solid #d5dce6;
+    border-radius: 16px;
+    padding: 1rem 1.15rem;
+    color: var(--switch-text-dark);
+    font-family: var(--font-nintendo-ui);
+    font-size: 1.02rem;
+    line-height: 28px;
+    resize: none;
+    outline: none;
+}
+
+textarea:focus {
+    background-color: #ffffff;
+    border-color: var(--switch-cursor-cyan);
+    box-shadow: 0 0 0 4px rgba(0, 210, 255, 0.25);
+}
+
+button {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--nintendo-red-bright) 0%, var(--nintendo-red) 100%);
+    color: var(--nintendo-white);
+    font-family: var(--font-nintendo-ui);
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    border: 3px solid #ffffff;
+    border-radius: 999px;
+    padding: 1rem 1.75rem 1rem 1.5rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    box-shadow: 0 8px 0 var(--nintendo-red-dark), 0 10px 0 #1c1e24;
+}
+
+button::after {
+    content: "A";
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--nintendo-red);
+    font-family: var(--font-nintendo-mono);
+    font-weight: 900;
+}
+
+button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ff1f33 0%, #ff8800 50%, #ffcc00 100%);
+}
+
+button:disabled {
+    background: #d0d5df;
+    border-color: #e4e8f0;
+    color: #7c8494;
+    cursor: not-allowed;
+    box-shadow: 0 5px 0 #aeb5c2;
+}
+
+output {
+    display: block;
+    flex-grow: 1;
+    min-height: 235px;
+    background-color: #fffdf7;
+    background-image: radial-gradient(#e8e2d0 1.5px, transparent 1.5px);
+    background-size: 18px 18px;
+    border: 3px solid #e0d8c3;
+    border-radius: 18px;
+    padding: 1.35rem 3.5rem 2.2rem 1.35rem;
+    font-family: var(--font-nintendo-ui);
+    font-size: 1.08rem;
+    color: #8c8270;
+    position: relative;
+    word-wrap: break-word;
+}
+
+output[data-populated="false"] {
+    border-color: var(--joycon-blue);
+    color: var(--joycon-blue-deep);
+    background: repeating-linear-gradient(-45deg, #f0fcff 0px, #f0fcff 16px, #d9f7ff 16px, #d9f7ff 32px);
+}
+
+output[data-populated="true"] {
+    background-color: #ffffff;
+    border: 3px solid var(--mario-gold-dark);
+    color: #1c1e24;
+    box-shadow: 0 8px 0 rgba(204, 136, 0, 0.25);
+}
+
+@media (max-width: 960px) {
+    main {
+        grid-template-columns: 1fr;
+        border-width: 18px;
+    }
+    main::before, main::after { display: none; }
+}
